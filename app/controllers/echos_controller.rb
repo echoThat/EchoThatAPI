@@ -1,5 +1,6 @@
 class EchosController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  before_action :check_token, only: :create
 
   def create
     args_echo = Echo.to_args(params)

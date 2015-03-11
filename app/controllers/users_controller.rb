@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  before_action :check_token, only: :update_sharing
 
   def new
 
@@ -32,12 +33,13 @@ class UsersController < ApplicationController
   end
 
   def update_sharing
-    user = User.find_by(google_credentials: params['google_credentials'])
+    hashtext = JSON.parse(params.first[0])
+    user = User.find_by(google_credentials: hashtext['google_credentials'])
 
-    if params.fetch('twitterOn', nil) != nil
-      user.update(twitter_on: params['twitterOn'])
-    elsif params.fetch('facebookOn', nil) != nil
-      user.update(facebook_on: params['facebookOn'])
+    if hashtext['outlet'] == 'twitterOn'
+      user.update(twitter_on: hashtext['booleanTerm'])
+    elsif hashtext['outlet'] == 'facebookOn'
+      user.update(facebook_on: hashtext['booleanTerm'])
     end
     answer = {message: "successfully updated post preferences"}
     render json: answer
