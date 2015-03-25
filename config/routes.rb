@@ -11,9 +11,13 @@ Rails.application.routes.draw do
   get '/o/:short_url' => 'echos#expand', as:'expand'
 
   get 'privacy' => 'support#privacy'
+
   get   'bug_report' => 'support#new'
   post  'bug_reports' => 'support#create'
   get   'bug_reports' => 'support#thanks'
-
   get '/bugs', '/bugreport', '/report', 'bug-report', to: redirect('/bug_report')
+
+  get '/termsofservice' => 'support#terms'
+  get '/terms', to: redirect('/termsofservice')
+
 end
