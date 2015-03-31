@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150318212048) do
+ActiveRecord::Schema.define(version: 20150331174905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 20150318212048) do
     t.string   "send_to_venue"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "user_text"
+    t.text     "quoted_content"
   end
 
   add_index "echos", ["short_url"], name: "index_echos_on_short_url", unique: true, using: :btree
