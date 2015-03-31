@@ -66,7 +66,13 @@ class EchosController < ApplicationController
 
     def update_if_facebook(client, echo)
       if !(echo.is_draft) && echo.send_to_venue == "facebook"
-        client.put_connections("me", "feed", :message => "#{echo.body} #{expand_url(echo.short_url)}")
+        user = client.get_object('me')
+        client.put_wall_post(echo.user_text, {
+          "name" => "#{user.name} echoed this:",
+          "link" => expand_url(echo.short_url),
+          "caption" => "#{user.name} quoted...",
+          "description" => echo.quoted_content
+        })
       end
       # return echo.send_to_venue
     end
