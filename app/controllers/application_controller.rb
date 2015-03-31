@@ -7,7 +7,7 @@ private
 
     def check_token
       hashtext = JSON.parse(params.first[0])
-      user = User.find_by(google_credentials: hashtext['google_credentials'])
+      user = User.find_or_create_by(google_credentials: hashtext['google_credentials'])
       unless user.chrome_token == hashtext['chrome_token']
         render status: 401 and return
       end
