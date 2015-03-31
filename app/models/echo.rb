@@ -40,12 +40,24 @@ class Echo < ActiveRecord::Base
     received = JSON.parse(json_obj.first[0])
     hash = {}
     hash[:is_draft] = received.fetch("is_draft", false)
-    hash[:body] = received.fetch("message", "")
-    self.decode_chars(hash[:body])
-
     hash[:long_url] = self.sanitize_url( received.fetch("url") )
 
+    self.format_post_parts!(received, hash)
+
     return hash
+  end
+
+  def self.format_post_parts!(received, output_hash)
+    content = received.fetch("message", "")
+    output_hash[:user_text] = content.fetch("userText", "")
+    output_hash[:quoted_content] = content.fetch("echoQuote", "")
+
+    self.decode_chars(output_hash[:user_text])
+    self.decode_chars(output_hash[:quoted_content])
+
+    #for outlets that take a full string
+    output_hash[:body] = [output_hash[:quoted_content], output_hash[:user_text]].join(" ")
+    output_hash
   end
 
   def self.sanitize_url(url)

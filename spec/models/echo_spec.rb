@@ -2,12 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Echo, :type => :model do
 
-  let(:params){ {
-    "{\"message\":\"From Wikipedia, the free encyclopedia \",\"url\":\"https://en.wikipedia.org/wiki/Batman:_Arkham_City\",\"google_credentials\":\"104171572057165723377\",
-    \"chrome_token\":\"23imtculozn89v5fysbg470ep\"}"=>nil,
-     "controller"=>"echos",
-      "action"=>"create"}
-    }
+  let(:params){{
+    "{\"message\":{\"echoQuote\":\"\\\"It’s important to understand etcode4osqbr...etcode4csqbr leading to a degradation of performance.\\\"\",\"userText\":\"#mysterious\"},\"url\":\"https://devcenter.heroku.com/articles/config-vars\",\"google_credentials\":\"echothatechothat@gmail.com\",\"chrome_token\":\"rq218lwdt6usg75nxhpobjf9a\"}"=>nil
+    }}
 
   it "should produce a hash with default values to_args class method" do
     args = Echo.to_args(params)
@@ -50,6 +47,24 @@ RSpec.describe Echo, :type => :model do
       user.echos << e
     end
     expect(user.echos.count > before).to be true
+  end
+
+  it "should have user text and quoted text separately" do
+    args = Echo.to_args(params)
+    user = create(:valid_user)
+    outlets = user.accounts
+    echos = Echo.build_for_each_outlet(outlets, args)
+    expect(echos.first[:user_text].length).to be > 4
+    expect(echos.first[:quoted_content].length).to be > 5
+  end
+
+  it "should encoded square brackets correctly" do
+    args = Echo.to_args(params)
+    user = create(:valid_user)
+    outlets = user.accounts
+    echos = Echo.build_for_each_outlet(outlets, args)
+    expect(echos.first[:quoted_content].include?("[")).to be true
+    expect(echos.first[:quoted_content].include?("]")).to be true
   end
 
 end

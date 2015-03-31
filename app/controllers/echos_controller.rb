@@ -10,12 +10,20 @@ class EchosController < ApplicationController
     outlets = user.accounts
     echos = Echo.build_for_each_outlet(outlets, args_echo)
     echos.each {|e| user.echos << e}
-
     facebook_client = init_facebook(user)
-    echos.each{|e| update_if_facebook(facebook_client, e)}
-
     twitter_client = init_twitter(user)
-    echos.each{|e| update_if_twitter(twitter_client, e)}
+
+    begin
+      echos.each{|e| update_if_facebook(facebook_client, e)}
+    rescue Koala::Facebook::AuthenticationError => err
+      p "Facebook update error occured: #{err}"
+    end
+
+    begin
+      echos.each{|e| update_if_twitter(twitter_client, e)}
+    rescue Exception => err_two
+      p "Twitter update error occurred: #{err_two}"
+    end
 
     render status: 200
   end
@@ -32,7 +40,11 @@ class EchosController < ApplicationController
   private
 
   def init_facebook(user)
-    Koala::Facebook::API.new(user.facebook_token, ENV["FACEBOOK_SECRET"])
+    begin
+      Koala::Facebook::API.new(user.facebook_token, ENV["FACEBOOK_SECRET"])
+    rescue Exception => e
+      p "Facebook auth error: #{e}"
+    end
   end
 
   def init_twitter(user)
