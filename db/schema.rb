@@ -16,11 +16,6 @@ ActiveRecord::Schema.define(version: 20150331174905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "contact_forms", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "echos", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "long_url"
@@ -42,15 +37,6 @@ ActiveRecord::Schema.define(version: 20150331174905) do
     t.string   "sender",     null: false
     t.string   "recipient",  null: false
     t.datetime "sent_on"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "support_issues", force: :cascade do |t|
-    t.string   "sender",     null: false
-    t.text     "body"
-    t.string   "to"
-    t.string   "subject"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
