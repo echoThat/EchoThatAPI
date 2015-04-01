@@ -15,7 +15,7 @@ class EchosController < ApplicationController
 
     begin
       echos.each{|e| update_if_facebook(facebook_client, e)}
-    rescue Koala::Facebook::AuthenticationError => err
+    rescue Exception => err
       p "Facebook update error occured: #{err}"
     end
 
