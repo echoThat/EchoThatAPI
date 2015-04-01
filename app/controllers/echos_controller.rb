@@ -68,9 +68,9 @@ class EchosController < ApplicationController
       if !(echo.is_draft) && echo.send_to_venue == "facebook"
         user = client.get_object('me')
         client.put_wall_post(echo.user_text, {
-          "name" => "#{user.name} echoed this:",
+          "name" => "#{user["name"]} echoed this:",
           "link" => expand_url(echo.short_url),
-          "caption" => "#{user.name} quoted...",
+          "caption" => "#{user["name"]} quoted...",
           "description" => echo.quoted_content
         })
       end
