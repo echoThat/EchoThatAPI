@@ -19,6 +19,13 @@ class Echo < ActiveRecord::Base
     self.update_attribute(:short_url, salt + id_part)
   end
 
+  def domain_name
+    pretty = long_url.gsub("http://","")
+    pretty.gsub!("https://","")
+    pretty.gsub!("www.","")
+    pretty[/\A[\w.]+/]
+  end
+
   def self.build_for_each_outlet(outlets, args)
     echos = []
     outlets.each do |site|
