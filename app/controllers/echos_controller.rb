@@ -15,7 +15,7 @@ class EchosController < ApplicationController
 
     begin
       echos.each{|e| update_if_facebook(facebook_client, e)}
-    rescue Koala::Facebook::AuthenticationError => err
+    rescue Exception => err
       p "Facebook update error occured: #{err}"
     end
 
@@ -68,9 +68,8 @@ class EchosController < ApplicationController
       if !(echo.is_draft) && echo.send_to_venue == "facebook"
         user = client.get_object('me')
         client.put_wall_post(echo.user_text, {
-          "name" => "#{user.name} echoed this:",
           "link" => expand_url(echo.short_url),
-          "caption" => "#{user.name} quoted...",
+          "caption" => echo.domain_name,
           "description" => echo.quoted_content
         })
       end
